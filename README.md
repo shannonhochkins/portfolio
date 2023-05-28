@@ -56,7 +56,7 @@ npm i
 Run dev mode
 
 ```bash
-npm run dev
+npm start
 ```
 
 Build
