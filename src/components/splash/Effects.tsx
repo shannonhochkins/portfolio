@@ -1,54 +1,58 @@
-import { WebGLRenderTarget, Vector2 } from 'three';
-import { useRef, useMemo, useEffect } from 'react';
+import { WebGLRenderTarget, Vector2, Scene } from 'three';
+import { useRef, useMemo, useEffect, useState } from 'react';
 import { extend, useThree, useFrame, ReactThreeFiber } from '@react-three/fiber';
 import { Effects } from '@react-three/drei';
-import { UnrealBloomPass, RenderPass, WaterPass, BloomPass } from 'three-stdlib';
+import { RenderPass, WaterPass, UnrealBloomPass } from 'three-stdlib';
 import type { EffectComposer as EffectComposerGeneric } from 'three-stdlib';
+import { useControls } from 'leva';
 
-extend({ UnrealBloomPass, RenderPass, WaterPass, BloomPass });
+extend({ UnrealBloomPass, RenderPass, WaterPass });
 
 declare global {
   namespace JSX {
     interface IntrinsicElements {
       waterPass: ReactThreeFiber.Object3DNode<WaterPass, typeof WaterPass>,
       unrealBloomPass: ReactThreeFiber.Object3DNode<UnrealBloomPass, typeof UnrealBloomPass>,
-      bloomPass: ReactThreeFiber.Object3DNode<BloomPass, typeof BloomPass>,
     }
   }
 }
 
-export default function ApplyEffects() {
+export default function ApplyEffects({ children }: { children: React.ReactNode }) {
   const waterPass = useRef<WaterPass>(null!);
   const composer = useRef<EffectComposerGeneric<WebGLRenderTarget>>(null!)
-  const { scene, gl, size, camera } = useThree()
-  const aspect = useMemo(() => new Vector2(512, 512), [])
-  // const { intensity, distance, color, ambientIntensity } = useControls('Bloom', {
-  //   intensity: { value: 9, min: 0, max: 200, step: 0.5 },
-  //   distance: { value: 100, min: -100, max: 100, step: 0.5 },
-  //   color: "#7c0505",
-  //   ambientIntensity: { value: 1, min: -3, max: 3, step: 0.1 },
-  // });
+  const { size, camera } = useThree();
+  const aspect = useMemo(() => new Vector2(2046, 2046), [])
+  const [scene, setScene] = useState<Scene>();
+  const {strength, threshold, radius} = useControls('Bloom', {
+    threshold: { value: 0.1, min: 0, max: 1, step: 0.01 },
+    strength: { value: 1.5, min: 0, max: 10, step: 0.01 },
+    radius: { value: 0.05, min: 0, max: 1, step: 0.01 },
+  })
   useEffect(() => {
     if (composer.current) {
       composer.current.setSize(size.width, size.height)
     }
   }, [size])
-  useFrame((state, delta) => {
+  useFrame(() => {
     composer.current?.render();
     if (waterPass.current) {
       waterPass.current.time += 0.05;
     }
-  }, 1)
-  console.log('waterPass', waterPass);
-  return (
-    <Effects ref={composer} disableGamma={true} disableRenderPass={true} >
-      <renderPass scene={scene} camera={camera} />
+  }, 1);
+  return <>
+    <scene ref={(ref) => {
+      if (ref && !scene) {
+        setScene(ref);
+      }
+    }}>{children}</scene>
+    <Effects ref={composer} disableGamma={true} disableRenderPass={false}>
       <waterPass ref={waterPass} attach="passes" factor={0.6} />
       <unrealBloomPass
-        threshold={0.1}
-        strength={1.5}
-        radius={0.05}
+        threshold={threshold}
+        strength={strength}
+        radius={radius}
         resolution={aspect} />
     </Effects>
-  )
+  </>;
 }
+

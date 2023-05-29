@@ -3,6 +3,8 @@ import { useRef, useMemo } from 'react'
 import { useFrame, useThree } from '@react-three/fiber';
 import { useControls } from 'leva';
 
+// reference: https://varun.ca/three-js-particles/
+
 
 interface ParticlesProps {
   count: number;
@@ -19,17 +21,23 @@ export default function Particles({ count }: ParticlesProps) {
     thickness,
     metalness,
     reflecivity,
-    particleColor
+    particleColor,
+    angle,
+    penumbra,
+    decay,
   } = useControls('Particle lights', {
-    intensity: { value: 10, min: 0, max: 100, step: 0.5 },
-    distance: { value: 80, min: -100, max: 100, step: 0.5 },
+    intensity: { value: 12, min: 0, max: 100, step: 0.5 },
+    angle: { value: 8, min: 0, max: 10, step: 0.01 },
+    penumbra: { value: 0.6, min: 0, max: 1, step: 0.01 },
+    decay: { value: 0.2, min: 0, max: 10, step: 0.1 },
+    distance: { value: 16.5, min: -100, max: 100, step: 0.5 },
     clearcoat: { value: 0, min: -1, max: 1, step: 0.05 },
     roughness: { value: 0.1, min: -1, max: 1, step: 0.01 },
     thickness: { value: 1, min: -10, max: 10, step: 0.1 },
-    metalness: { value: 0.85, min: 0.5, max: 1, step: 0.001 },
+    metalness: { value: 0.92, min: 0.5, max: 1, step: 0.001 },
     reflecivity: { value: 0.1, min: -10, max: 10, step: 0.1 },
-    color: "lightblue",
-    particleColor: '#050505'
+    color: "#2bceff",
+    particleColor: '#ffaeae'
   });
   const { size, viewport } = useThree();
   const aspect = size.width / viewport.width
@@ -42,7 +50,7 @@ export default function Particles({ count }: ParticlesProps) {
       const t = Math.random() * 10
       const factor = 20 + Math.random() * 100
       const speed = 0.01 + Math.random() / 200
-      const xFactor = -150 + Math.random() * 300
+      const xFactor = -50 + Math.random() * 100
       const yFactor = -50 + Math.random() * 100
       const zFactor = -50 + Math.random() * 100
       temp.push({ t, factor, speed, xFactor, yFactor, zFactor, mx: 0, my: 0 })
@@ -52,8 +60,12 @@ export default function Particles({ count }: ParticlesProps) {
   // The innards of this hook will run every frame
   useFrame((state) => {
     if (light.current) {
+      const { x , y } = {
+        x: state.mouse.x === 0 ? -0.67 : state.mouse.x,
+        y: state.mouse.y === 0 ? 0.01 : state.mouse.y,
+      }
       // Makes the light follow the mouse
-      light.current.position.set(state.mouse.x / aspect, -state.mouse.y / aspect, 0)
+      light.current.position.set(x / aspect, -y / aspect, 0);
     }
     if (!mesh.current) {
       return;
@@ -87,7 +99,15 @@ export default function Particles({ count }: ParticlesProps) {
   })
   return (
     <>
-      <pointLight ref={light} distance={distance} intensity={intensity} color={color} />
+      <spotLight
+        ref={light}
+        position={[-0.2, -0.07, 0]}
+        distance={distance}
+        intensity={intensity}
+        angle={angle}
+        penumbra={penumbra}
+        decay={decay}
+        color={color} />
       <instancedMesh ref={mesh} args={[undefined, undefined, count]}>
         <dodecahedronGeometry args={[0.2, 0]} />
         <meshPhysicalMaterial color={particleColor} {...{
