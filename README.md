@@ -1,5 +1,8 @@
 
 
+### Development
+
+1. `nvm use && npm i && npm start`
 
 ### Deployment
 
