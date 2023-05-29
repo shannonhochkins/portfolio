@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 
 interface CardProps {
   children: React.ReactNode;
+  href: string;
 }
 
 const Glass = styled.div`
@@ -11,12 +12,8 @@ const Glass = styled.div`
   filter: blur(10px);
   transform: translateY(10px) scale(1.25);
 `;
-const Img = styled.img`
-  position: relative;
-  z-index: 0;
-`;
 
-const StyledCard = styled.span`
+const StyledCard = styled.a`
   position: relative;
   display: flex;
   justify-content: center;
@@ -34,9 +31,9 @@ const StyledCard = styled.span`
 
 `;
 
-export default function Card({ children }: CardProps) {
+export default function Card({ children, href }: CardProps) {
   return (
-    <StyledCard>
+    <StyledCard href={href}>
       <Glass />
       {children}
     </StyledCard>

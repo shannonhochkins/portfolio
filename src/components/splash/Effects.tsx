@@ -20,7 +20,7 @@ declare global {
 export default function ApplyEffects({ children }: { children: React.ReactNode }) {
   const waterPass = useRef<WaterPass>(null!);
   const composer = useRef<EffectComposerGeneric<WebGLRenderTarget>>(null!)
-  const { size, camera } = useThree();
+  const { size } = useThree();
   const aspect = useMemo(() => new Vector2(2046, 2046), [])
   const [scene, setScene] = useState<Scene>();
   const {strength, threshold, radius} = useControls('Bloom', {

@@ -2,8 +2,6 @@
 import Card from './components/Card'
 import Dock from './components/Dock'
 import DockCard from './components/DockCard'
-import DockDivider from './components/DockDivider'
-
 import { ReactComponent as Email } from './assets/email.svg';
 import { ReactComponent as LinkedIn } from './assets/linkedIn.svg';
 import { ReactComponent as GitHub } from './assets/github.svg';
@@ -35,9 +33,9 @@ const SOCIALS: Socials[] = [
 export default function Socials() {
   return (
     <Dock>
-      {SOCIALS.map(({ name, child, href }, index) =>
+      {SOCIALS.map(({ name, child, href }) =>
         <DockCard key={name}>
-          <Card>
+          <Card href={href}>
             {child}
           </Card>
         </DockCard>

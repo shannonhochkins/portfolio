@@ -1,4 +1,4 @@
-import { Object3D, PointLight, InstancedMesh } from 'three'
+import { Object3D, SpotLight, InstancedMesh } from 'three'
 import { useRef, useMemo } from 'react'
 import { useFrame, useThree } from '@react-three/fiber';
 import { useControls } from 'leva';
@@ -11,7 +11,7 @@ interface ParticlesProps {
 }
 export default function Particles({ count }: ParticlesProps) {
   const mesh = useRef<InstancedMesh>(null);
-  const light = useRef<PointLight>(null);
+  const light = useRef<SpotLight>(null);
   const {
     intensity,
     distance,

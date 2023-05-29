@@ -11,17 +11,16 @@ import React, {
   useRef,
   ForwardedRef,
   Suspense,
-  useEffect
 } from 'react';
 import {
   useFrame
 } from '@react-three/fiber';
 import {
   Text3D,
-  Text
+  Text,
 } from '@react-three/drei';
 import { useControls } from 'leva';
-import fontBlob from './font.json';
+import roboto from './assets/roboto';
 
 interface TextProps {
   children: React.ReactNode;
@@ -41,12 +40,9 @@ export const Name = forwardRef((
     ...props
   }: TextProps, ref: ForwardedRef<Group>) => {
   const mesh = useRef<Mesh>(null);
-  const { clearcoat, thickness, roughness, metalness, reflecivity, color } = useControls('Text Material', {
-    clearcoat: { value: 0, min: -1, max: 1, step: 0.05 },
+  const { roughness, metalness, color } = useControls('Text Material', {
     roughness: { value: 0.1, min: -1, max: 1, step: 0.01 },
-    thickness: { value: 1, min: -10, max: 10, step: 0.1 },
     metalness: { value: 0.85, min: 0.5, max: 1, step: 0.001 },
-    reflecivity: { value: 0.1, min: -10, max: 10, step: 0.1 },
     color: "#ff7bb2",
   })
   useLayoutEffect(() => {
@@ -61,16 +57,13 @@ export const Name = forwardRef((
   return (
     <group ref={ref} {...props} scale={[0.1 * size, 0.1 * size, 0.1]}>
       <mesh>
-        <Text3D ref={mesh} font={fontBlob} size={2} height={40} curveSegments={50}>
+        <Text3D ref={mesh} font={roboto} size={2} height={40} curveSegments={50}>
           {children}
           <meshStandardMaterial
             color={color}
             wireframe={true}
             roughness={roughness}
-            clearcoat={clearcoat}
-            thickness={thickness}
             metalness={metalness}
-            reflectivity={reflecivity}
            />
         </Text3D>
       </mesh>
