@@ -8,7 +8,9 @@ import Socials from './Socials';
 import { useWindowSize } from '../../hooks/useWindowSize';
 import { useStore } from '../../store';
 
-const Note = styled.div`
+const Note = styled.div<{
+	isMobile: boolean;
+}>`
 	font-size: 1rem;
 	position: absolute;
 	bottom: 0;
@@ -19,6 +21,13 @@ const Note = styled.div`
 	justify-content: center;
 	font-weight: 300;
 	flex-direction: column;
+	${(props) =>
+		props.isMobile &&
+		`
+    width: 100%;
+    position: abosolute;
+    right: auto;
+  `}
 	p {
 		font-weight: 300;
 		margin: 0;
@@ -31,7 +40,7 @@ const Note = styled.div`
 `;
 
 export const Splash = () => {
-	const { setDeviceType } = useStore();
+	const { setDeviceType, device } = useStore();
 	const size = useWindowSize();
 	useEffect(() => {
 		setDeviceType();
@@ -48,7 +57,7 @@ export const Splash = () => {
 					<Particles />
 				</ApplyEffects>
 			</Canvas>
-			<Note>
+			<Note isMobile={device === 'mobile'}>
 				<p>BUILT WITH</p>
 				<span>React, R3F, Emotion, TS, Zustand</span>
 			</Note>

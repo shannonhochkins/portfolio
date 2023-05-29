@@ -4,14 +4,18 @@ import styled from '@emotion/styled';
 import { clamp } from '@react-spring/shared';
 import { useWindowResize } from '../hooks/useWindowResize';
 import { DockContext } from './DockContext';
+import { useStore } from '../../../../../store';
 
 interface DockProps {
 	children: React.ReactNode;
 }
+interface AnimatedDivProps {
+	bottom: number;
+}
 
-const Animated = styled(animated.div)`
+const Animated = styled(animated.div)<AnimatedDivProps>`
 	position: fixed;
-	bottom: 12px;
+	bottom: ${props => props.bottom}px;
 	left: 50%;
 	transform: translateX(-50%);
 	align-items: flex-end;
@@ -30,6 +34,7 @@ const Animated = styled(animated.div)`
 export const DOCK_ZOOM_LIMIT = [-100, 50];
 
 export default function Dock({ children }: DockProps) {
+	const { device } = useStore();
 	const [hovered, setHovered] = React.useState(false);
 	const [width, setWidth] = React.useState(0);
 	const isZooming = React.useRef(false);
@@ -53,6 +58,7 @@ export default function Dock({ children }: DockProps) {
 	return (
 		<DockContext.Provider value={{ hovered, setIsZooming, width, zoomLevel }}>
 			<Animated
+				bottom={device === 'mobile' ? 48 : 12}
 				ref={dockRef}
 				onMouseOver={() => {
 					if (!isZooming.current) {

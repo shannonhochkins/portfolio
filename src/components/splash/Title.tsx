@@ -62,7 +62,7 @@ export default function Title() {
 	const pointLightRef = useRef<PointLight>(null);
 	const { device } = useStore();
 	const fontSize = useMemo(() => {
-		return device === 'mobile' ? 9 : 15;
+		return device === 'mobile' ? 10 : 15;
 	}, [device]);
 	const { intensity, distance, color, decay } = useControls(
 		'Title Point Light',

@@ -1,5 +1,7 @@
 
+## About
 
+Just a really simple splash page for my upcoming portfolio (sometime this year..., you know, kids...)
 ### Development
 
 1. `nvm use && npm i && npm start`

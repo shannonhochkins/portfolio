@@ -31,8 +31,8 @@ const DockDot = styled(animated.div)`
 
 const DockButton = styled(animated.button)`
 	border-radius: 12px;
-	border: solid 1px rgba(255, 255, 255, 0.1);
-	background-color: #262626;
+	border: solid 1px rgba(255, 255, 255, 0.7);
+	background-color: rgba(255, 255, 255, 0.1);
 	filter: saturate(0.9) brightness(0.9);
 	transition: filter 200ms;
 	padding: 0;
@@ -45,7 +45,8 @@ const DockButton = styled(animated.button)`
 	svg {
 		position: absolute;
 		inset: 0;
-		padding: 4px;
+		padding: 8px;
+		fill: white;
 	}
 `;
 

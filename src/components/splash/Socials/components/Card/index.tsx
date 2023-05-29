@@ -32,7 +32,7 @@ const StyledCard = styled.a`
 
 export default function Card({ children, href }: CardProps) {
 	return (
-		<StyledCard href={href}>
+		<StyledCard href={href} target="_blank">
 			<Glass />
 			{children}
 		</StyledCard>
