@@ -15,7 +15,7 @@
     "@types/three": "^0.152.1",
     "prettier": "^2.8.8",
     "typescript": "^5.0.4",
-    "vite": "^4.3.8"
+    "vite": "^4.4.9"
   },
   "dependencies": {
     "@emotion/react": "^11.11.0",
